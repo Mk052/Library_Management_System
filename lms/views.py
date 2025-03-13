@@ -241,3 +241,17 @@ class FineRetrieveUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Fine.objects.all()
     serializer_class = FineSerializer
     permission_classes = [IsAuthenticated]
+
+
+class FineStudentListAPIView(generics.ListAPIView):
+    def get(self, request, **kwargs):
+        student_id = self.kwargs.get("pk")
+        student = Student.objects.filter(id=student_id).first()
+        if not student:
+            return Response(
+                {"msg": "student does not exits"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        fine = Fine.objects.filter(issue_book__student=student)
+        serializer = FineSerializer(fine, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
