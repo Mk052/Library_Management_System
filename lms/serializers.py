@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from lms.models import (User, Author, Category, Book)
+from lms.models import (User, Author, Category, Book, Course)
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -75,3 +75,11 @@ class BookSerializer(serializers.ModelSerializer):
             "author_id",
             "category_id",
         ]
+
+
+class CourseSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
+
+    class Meta:
+        model = Course
+        fields = ["id", "name"]
