@@ -1,10 +1,11 @@
 from rest_framework import generics, status
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from lms.models import (User, Student)
-from lms.serializers import (UserSerializer)
+from lms.models import (User, Student, Author)
+from lms.serializers import (UserSerializer, AuthorSerializer)
 from lms.utils import get_tokens_for_user
 
 
@@ -49,3 +50,10 @@ class UserLogoutAPIView(generics.GenericAPIView):
             token.blacklist()
             return Response({"msg": "successfully logout"},
                             status=status.HTTP_200_OK)
+
+
+class AuthorListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Author.objects.all()
+    serializer_class = AuthorSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = PageNumberPagination
