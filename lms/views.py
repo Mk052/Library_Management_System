@@ -1,12 +1,12 @@
 from rest_framework import generics, status
 from rest_framework.pagination import PageNumberPagination
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from lms.models import (User, Student, Author, Category)
+from lms.models import (User, Student, Author, Category, Book)
 from lms.serializers import (UserSerializer, AuthorSerializer,
-                             CategorySerializer)
+                             CategorySerializer, BookSerializer)
 from lms.utils import get_tokens_for_user
 
 
@@ -82,3 +82,24 @@ class CategoryRetrieveUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = [IsAuthenticated]
+
+
+class BookListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    pagination_class = PageNumberPagination
+
+    def get_permissions(self):
+        if self.request.method in ["POST"]:
+            return [IsAdminUser(), IsAuthenticated()]
+        return [IsAuthenticated()]
+
+    def get_queryset(self):
+        author = self.request.GET.get("author")
+        category = self.request.GET.get("category")
+        book = Book.objects.all()
+        if author:
+            book = book.filter(author__name=author)
+        if category:
+            book = book.filter(category__name=category)
+        return book
