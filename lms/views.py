@@ -7,12 +7,12 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from lms.models import (User, Student, Author, Category, Book, Course,
-                        IssueBook)
+                        IssueBook, Fine)
 from lms.permission import CustomPermission, BookReturnPermission
 from lms.serializers import (UserSerializer, AuthorSerializer,
                              CategorySerializer, BookSerializer,
                              CourseSerializer, StudentSerializer,
-                             IssueBookSerializer)
+                             IssueBookSerializer, FineSerializer)
 from lms.utils import get_tokens_for_user
 
 
@@ -210,3 +210,28 @@ class BookReturnUpdateAPIView(generics.UpdateAPIView):
         issue_book.save()
         serializer = self.serializer_class(issue_book)
         return Response(serializer.data)
+
+
+class FineListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Fine.objects.all()
+    serializer_class = FineSerializer
+    pagination_class = PageNumberPagination
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        issue_book_id = request.data.get("issue_book_id")
+        issue_book = IssueBook.objects.filter(id=issue_book_id).first()
+        if issue_book is None:
+            return Response(
+                {"msg": "issue book does not exist"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        if not issue_book.is_returned:
+            serializer = self.serializer_class(data=request.data)
+            serializer.is_valid(raise_exception=True)
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(
+            {"msg": "book already returned within time period"},
+            status=status.HTTP_400_BAD_REQUEST,
+        )
