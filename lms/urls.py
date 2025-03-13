@@ -3,7 +3,8 @@ from django.urls import path
 from lms.views import (UserRegistrationAPIView, UserLoginAPIView,
                        UserLogoutAPIView, UserListAPIView,
                        AuthorListCreateAPIView,
-                       AuthorRetrieveUpdateDeleteAPIView)
+                       AuthorRetrieveUpdateDeleteAPIView,
+                       CategoryListCreateAPIView)
 
 urlpatterns = [
     path("signup/", UserRegistrationAPIView.as_view()),
@@ -12,4 +13,5 @@ urlpatterns = [
     path("user/", UserListAPIView.as_view()),
     path("author/", AuthorListCreateAPIView.as_view()),
     path("author/<int:pk>/", AuthorRetrieveUpdateDeleteAPIView.as_view()),
+    path("category/", CategoryListCreateAPIView.as_view()),
 ]

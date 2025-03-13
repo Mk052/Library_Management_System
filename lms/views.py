@@ -4,8 +4,9 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from lms.models import (User, Student, Author)
-from lms.serializers import (UserSerializer, AuthorSerializer)
+from lms.models import (User, Student, Author, Category)
+from lms.serializers import (UserSerializer, AuthorSerializer,
+                             CategorySerializer)
 from lms.utils import get_tokens_for_user
 
 
@@ -68,3 +69,10 @@ class AuthorRetrieveUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Author.objects.all()
     serializer_classes = AuthorSerializer
     permission_class = [IsAuthenticated]
+
+
+class CategoryListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Category.objects.all()
+    serializer_class = CategorySerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = PageNumberPagination
