@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from lms.models import (User, Author, Category, Book, Course)
+from lms.models import (User, Author, Category, Book, Course, Student)
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -83,3 +83,19 @@ class CourseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Course
         fields = ["id", "name"]
+
+
+class StudentSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
+    course_id = serializers.PrimaryKeyRelatedField(
+        queryset=Course.objects.all(), write_only=True, source="course"
+    )
+    course = serializers.StringRelatedField(read_only=True)
+    user_id = serializers.PrimaryKeyRelatedField(
+        queryset=User.objects.all(), write_only=True, source="user"
+    )
+    user = serializers.StringRelatedField(read_only=True, source="__str__")
+
+    class Meta:
+        model = Student
+        fields = ["id", "user", "roll_no", "course", "course_id", "user_id"]
