@@ -57,3 +57,9 @@ class AuthorListCreateAPIView(generics.ListCreateAPIView):
     serializer_class = AuthorSerializer
     permission_classes = [IsAuthenticated]
     pagination_class = PageNumberPagination
+
+
+class AuthorRetrieveUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Author.objects.all()
+    serializer_classes = AuthorSerializer
+    permission_class = [IsAuthenticated]
