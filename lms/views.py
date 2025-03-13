@@ -1,5 +1,7 @@
 from rest_framework import generics, status
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from rest_framework_simplejwt.tokens import RefreshToken
 
 from lms.models import (User, Student)
 from lms.serializers import (UserSerializer)
@@ -35,3 +37,15 @@ class UserLoginAPIView(generics.GenericAPIView):
             return Response({"msg": "User not found"})
         response = get_tokens_for_user(user)
         return Response(response)
+
+
+class UserLogoutAPIView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        refresh_token = request.data.get("refresh_token")
+        if refresh_token:
+            token = RefreshToken(refresh_token)
+            token.blacklist()
+            return Response({"msg": "successfully logout"},
+                            status=status.HTTP_200_OK)
