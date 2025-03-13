@@ -52,6 +52,11 @@ class UserLogoutAPIView(generics.GenericAPIView):
                             status=status.HTTP_200_OK)
 
 
+class UserListAPIView(generics.ListAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+
+
 class AuthorListCreateAPIView(generics.ListCreateAPIView):
     queryset = Author.objects.all()
     serializer_class = AuthorSerializer
