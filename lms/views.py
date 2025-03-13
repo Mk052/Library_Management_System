@@ -4,9 +4,10 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from lms.models import (User, Student, Author, Category, Book)
+from lms.models import (User, Student, Author, Category, Book, Course)
 from lms.serializers import (UserSerializer, AuthorSerializer,
-                             CategorySerializer, BookSerializer)
+                             CategorySerializer, BookSerializer,
+                             CourseSerializer)
 from lms.utils import get_tokens_for_user
 
 
@@ -109,3 +110,11 @@ class BookRetrieveUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [IsAdminUser]
+
+
+class CourseListCreateAPIView(generics.ListCreateAPIView):
+    queryset = Course.objects.all()
+    serializer_class = CourseSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = PageNumberPagination
+
