@@ -4,7 +4,7 @@ from lms.views import (UserRegistrationAPIView, UserLoginAPIView,
                        UserLogoutAPIView, UserListAPIView,
                        AuthorListCreateAPIView,
                        AuthorRetrieveUpdateDeleteAPIView,
-                       CategoryListCreateAPIView)
+                       CategoryListCreateAPIView, CategoryRetrieveUpdateDelete)
 
 urlpatterns = [
     path("signup/", UserRegistrationAPIView.as_view()),
@@ -14,4 +14,5 @@ urlpatterns = [
     path("author/", AuthorListCreateAPIView.as_view()),
     path("author/<int:pk>/", AuthorRetrieveUpdateDeleteAPIView.as_view()),
     path("category/", CategoryListCreateAPIView.as_view()),
+    path("category/<int:pk>/", CategoryRetrieveUpdateDelete.as_view()),
 ]
