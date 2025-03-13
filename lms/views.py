@@ -103,3 +103,9 @@ class BookListCreateAPIView(generics.ListCreateAPIView):
         if category:
             book = book.filter(category__name=category)
         return book
+
+
+class BookRetrieveUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    permission_classes = [IsAdminUser]
