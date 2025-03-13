@@ -4,11 +4,13 @@ from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
-from lms.models import (User, Student, Author, Category, Book, Course)
+from lms.models import (User, Student, Author, Category, Book, Course,
+                        IssueBook)
 from lms.permission import CustomPermission
 from lms.serializers import (UserSerializer, AuthorSerializer,
                              CategorySerializer, BookSerializer,
-                             CourseSerializer, StudentSerializer)
+                             CourseSerializer, StudentSerializer,
+                             IssueBookSerializer)
 from lms.utils import get_tokens_for_user
 
 
@@ -137,3 +139,45 @@ class StudentRetrieveUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
     permission_classes = [IsAuthenticated, CustomPermission]
+
+
+class IssueBookListCreateAPIView(generics.ListCreateAPIView):
+    queryset = IssueBook.objects.all()
+    serializer_class = IssueBookSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = PageNumberPagination
+
+    def post(self, request, *args, **kwargs):
+        book_id = request.data.get("book_id")
+        # breakpoint()
+        # student_id = self.request.data.get('student_id')
+        book = Book.objects.filter(id=book_id).first()
+        # if not Student.objects.filter(id=student_id).first():
+        #     return Response({"msg": "student does not exist"}, status=status.HTTP_404_NOT_FOUND)
+        if not book:
+            return Response(
+                {"msg": "book does not exist"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        if book.book_copies < 1:
+            return Response({"msg": "book is not available"})
+        book.book_copies -= 1
+        book.save()
+        serializer = self.serializer_class(data=request.data)
+
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+
+        return Response(serializer.data)
+
+    def get_queryset(self):
+        student = self.request.GET.get("student")
+        book = self.request.GET.get("book")
+        issue_book = IssueBook.objects.all()
+        if student:
+            # issue_book = issue_book.filter(student__id=student)
+            issue_book = issue_book.filter(student__user__email=student)
+        if book:
+            issue_book = issue_book.filter(book__id=book)
+            # issue_book = issue_book.filter(book__title__icontains=book)
+        return issue_book
