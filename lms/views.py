@@ -235,3 +235,9 @@ class FineListCreateAPIView(generics.ListCreateAPIView):
             {"msg": "book already returned within time period"},
             status=status.HTTP_400_BAD_REQUEST,
         )
+
+
+class FineRetrieveUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Fine.objects.all()
+    serializer_class = FineSerializer
+    permission_classes = [IsAuthenticated]
