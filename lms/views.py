@@ -131,3 +131,9 @@ class StudentListAPIView(generics.ListAPIView):
     permission_classes = [IsAuthenticated, CustomPermission]
     pagination_class = PageNumberPagination
     queryset = Student.objects.all()
+
+
+class StudentRetrieveUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Student.objects.all()
+    serializer_class = StudentSerializer
+    permission_classes = [IsAuthenticated, CustomPermission]
