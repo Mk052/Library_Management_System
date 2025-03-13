@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from rest_framework import generics, status
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
@@ -6,7 +8,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from lms.models import (User, Student, Author, Category, Book, Course,
                         IssueBook)
-from lms.permission import CustomPermission
+from lms.permission import CustomPermission, BookReturnPermission
 from lms.serializers import (UserSerializer, AuthorSerializer,
                              CategorySerializer, BookSerializer,
                              CourseSerializer, StudentSerializer,
@@ -181,3 +183,30 @@ class IssueBookListCreateAPIView(generics.ListCreateAPIView):
             issue_book = issue_book.filter(book__id=book)
             # issue_book = issue_book.filter(book__title__icontains=book)
         return issue_book
+
+
+class BookReturnUpdateAPIView(generics.UpdateAPIView):
+    queryset = IssueBook.objects.all()
+    serializer_class = IssueBookSerializer
+    permission_classes = [IsAuthenticated, BookReturnPermission]
+
+    def patch(self, request, *args, **kwargs):
+        issue_book = IssueBook.objects.filter(id=self.kwargs.get("pk")).first()
+        if issue_book is None:
+            return Response(
+                {"msg": "Issued book does not exit"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        if issue_book.is_returned is True:
+            return Response(
+                {"msg": "This book is already returned"},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+        book = issue_book.book
+        book.book_copies += 1
+        book.save()
+        issue_book.return_date = datetime.now()
+        issue_book.is_returned = True
+        issue_book.save()
+        serializer = self.serializer_class(issue_book)
+        return Response(serializer.data)
