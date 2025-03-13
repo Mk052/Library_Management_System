@@ -6,7 +6,7 @@ from lms.views import (UserRegistrationAPIView, UserLoginAPIView,
                        AuthorRetrieveUpdateDeleteAPIView,
                        CategoryListCreateAPIView, CategoryRetrieveUpdateDelete,
                        BookListCreateAPIView, BookRetrieveUpdateDeleteAPIView,
-                       CourseListCreateAPIView)
+                       CourseListCreateAPIView, CourseRetrieveUpdateDelete)
 
 urlpatterns = [
     path("signup/", UserRegistrationAPIView.as_view()),
@@ -20,4 +20,5 @@ urlpatterns = [
     path("book/", BookListCreateAPIView.as_view()),
     path("book/<int:pk>/", BookRetrieveUpdateDeleteAPIView.as_view()),
     path("course/", CourseListCreateAPIView.as_view()),
+    path("course/<int:pk>/", CourseRetrieveUpdateDelete.as_view()),
 ]

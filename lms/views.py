@@ -118,3 +118,8 @@ class CourseListCreateAPIView(generics.ListCreateAPIView):
     permission_classes = [IsAuthenticated]
     pagination_class = PageNumberPagination
 
+
+class CourseRetrieveUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
+    queryset = Course.objects.all()
+    serializer_class = CourseSerializer
+    permission_classes = [IsAuthenticated]
