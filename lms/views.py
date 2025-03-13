@@ -5,9 +5,10 @@ from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from lms.models import (User, Student, Author, Category, Book, Course)
+from lms.permission import CustomPermission
 from lms.serializers import (UserSerializer, AuthorSerializer,
                              CategorySerializer, BookSerializer,
-                             CourseSerializer)
+                             CourseSerializer, StudentSerializer)
 from lms.utils import get_tokens_for_user
 
 
@@ -123,3 +124,10 @@ class CourseRetrieveUpdateDelete(generics.RetrieveUpdateDestroyAPIView):
     queryset = Course.objects.all()
     serializer_class = CourseSerializer
     permission_classes = [IsAuthenticated]
+
+
+class StudentListAPIView(generics.ListAPIView):
+    serializer_class = StudentSerializer
+    permission_classes = [IsAuthenticated, CustomPermission]
+    pagination_class = PageNumberPagination
+    queryset = Student.objects.all()
