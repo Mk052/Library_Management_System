@@ -255,3 +255,26 @@ class FineStudentListAPIView(generics.ListAPIView):
         fine = Fine.objects.filter(issue_book__student=student)
         serializer = FineSerializer(fine, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class SearchAPIView(generics.ListAPIView):
+    def get(self, request):
+        search_query = request.GET.get("s")
+        if not search_query:
+            return Response({"msg": "provide the search value"})
+        book = Book.objects.filter(title__icontains=search_query)
+        if book:
+            serializer = BookSerializer(book, many=True)
+            return Response(serializer.data)
+        author = Author.objects.filter(name__icontains=search_query)
+        if author:
+            serializer = AuthorSerializer(author, many=True)
+            return Response(serializer.data)
+        category = Category.objects.filter(
+            name__full_name__icontains=search_query)
+        if category:
+            serializer = StudentSerializer(category, many=True)
+            return Response(serializer.data)
+
+        return Response({"msg": "No results found"},
+                        status=status.HTTP_404_NOT_FOUND)
