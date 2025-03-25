@@ -167,7 +167,8 @@ DEFAULT_FROM_EMAIL = "madhukushwaha8496@gmail.com"
 
 # Celery Setting
 
-CELERY_BROKER_URL = "redis://127.0.0.1:6379/0"
+# CELERY_BROKER_URL = "redis://127.0.0.1:6379/0"
+CELERY_BROKER_URL = "redis://localhost:6380/0"
 
 CELERY_TIMEZONE = "Asia/Kolkata"
 # CELERY_RESULT_BACKEND = 'django-db'
