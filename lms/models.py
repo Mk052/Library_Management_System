@@ -12,6 +12,19 @@ class TimestampedModel(models.Model):
     class Meta:
         abstract = True
 
+# User Model (Replaces the old Student model)
+class User(AbstractUser, TimestampedModel):
+    username = None  # Remove username field from AbstractUser
+    full_name = models.CharField(max_length=50)
+    email = models.EmailField(unique=True)
+
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = []
+
+    objects = CustomUserManager()
+
+    def __str__(self):
+        return self.email
 
 # Category Model
 class Category(TimestampedModel):
@@ -55,19 +68,6 @@ class Course(TimestampedModel):
         return self.name
 
 
-# User Model (Replaces the old Student model)
-class User(AbstractUser, TimestampedModel):
-    username = None  # Remove username field from AbstractUser
-    full_name = models.CharField(max_length=50)
-    email = models.EmailField(unique=True)
-
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = []
-
-    objects = CustomUserManager()
-
-    def __str__(self):
-        return self.email
 
 
 # New Student Model with One-to-One Relationship to User
