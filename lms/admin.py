@@ -48,13 +48,36 @@ class UserAdmin(BaseUserAdmin):
             None,
             {
                 "classes": ("wide",),
-                # "fields": ("email", "password1", "password2"),
+                "fields": ("email", "password1", "password2"),
             },
         ),
     )
     search_fields = ("email",)
     ordering = ("email",)
 
-
-# Now register the new UserAdmin...
 admin.site.register(User, UserAdmin)
+# # Now register the new UserAdmin...
+# admin.site.register(User, UserAdmin)
+
+# class CustomUserAdmin(UserAdmin):
+#     model = User
+#     list_display = ('email', 'full_name', 'is_active', 'is_staff')
+#     search_fields = ('email', 'full_name')
+#     ordering = ('email',)
+
+#     fieldsets = (
+#         (None, {'fields': ('email', 'password')}),
+#         ('Personal Info', {'fields': ('full_name',)}),
+#         ('Permissions', {'fields': ('is_active', 'is_staff', 'is_superuser', 'groups', 'user_permissions')}),
+#         ('Important dates', {'fields': ('last_login', 'date_joined')}),
+#     )
+
+#     add_fieldsets = (
+#         (None, {
+#             'classes': ('wide',),
+#             'fields': ('email', 'full_name', 'password1', 'password2'),
+#         }),
+#     )
+
+# admin.site.register(User, CustomUserAdmin)
+
