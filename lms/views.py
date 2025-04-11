@@ -1,4 +1,5 @@
 from datetime import datetime
+from django.utils import timezone
 
 from rest_framework import generics, status
 from rest_framework.pagination import PageNumberPagination
@@ -31,6 +32,8 @@ class UserRegistrationAPIView(generics.GenericAPIView):
 
     def perform_create(self, serializer):
         user = serializer.save()
+        user.set_password(serializer.validated_data['password'])
+        user.save()
         Student.objects.create(user=user)
 
 
@@ -40,16 +43,19 @@ class UserLoginAPIView(generics.GenericAPIView):
 
     def post(self, request, *args, **kwargs):
         email = self.request.data.get("email")
+        password = self.request.data.get("password")
         user = User.objects.filter(email=email).first()
         if not user:
-            return Response({"msg": "User not found"})
-        response = get_tokens_for_user(user)
-        return Response(response)
+           return Response({"msg": "User not found"})
+        if user.check_password(password):
+            response = get_tokens_for_user(user)
+            return Response(response)
+        else:
+            return Response({"msg": "password incorrect"})
 
 
 class UserLogoutAPIView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
-
     def post(self, request):
         refresh_token = request.data.get("refresh_token")
         if refresh_token:
@@ -73,8 +79,8 @@ class AuthorListCreateAPIView(generics.ListCreateAPIView):
 
 class AuthorRetrieveUpdateDeleteAPIView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Author.objects.all()
-    serializer_classes = AuthorSerializer
-    permission_class = [IsAuthenticated]
+    serializer_class = AuthorSerializer
+    permission_classes = [IsAuthenticated]
 
 
 class CategoryListCreateAPIView(generics.ListCreateAPIView):
@@ -226,7 +232,7 @@ class FineListCreateAPIView(generics.ListCreateAPIView):
                 {"msg": "issue book does not exist"},
                 status=status.HTTP_404_NOT_FOUND
             )
-        if not issue_book.is_returned:
+        if not issue_book.is_returned and issue_book.return_date < timezone.now(): 
             serializer = self.serializer_class(data=request.data)
             serializer.is_valid(raise_exception=True)
             serializer.save()
