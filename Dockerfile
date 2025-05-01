@@ -22,4 +22,4 @@ COPY . /app/
 #     pip install -U celery
 
 # Default command (will be overridden by docker-compose) or  Specify default commands.
-CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]   
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"] 

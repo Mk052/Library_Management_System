@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
-from lms.models import (User, Author, Category, Book, Course, Student,
-                        IssueBook, Fine)
+from lms.models import Author, Book, Category, Course, Fine, IssueBook, Student, User
 
 
 class UserSerializer(serializers.ModelSerializer):

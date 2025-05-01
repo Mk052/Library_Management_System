@@ -1,8 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 
-from lms.models import (Author, Book, Category, Course, Fine, IssueBook,
-                        Student, User)
+from lms.models import Author, Book, Category, Course, Fine, IssueBook, Student, User
 
 admin.site.register(Author)
 admin.site.register(Course)
@@ -55,6 +54,7 @@ class UserAdmin(BaseUserAdmin):
     search_fields = ("email",)
     ordering = ("email",)
 
+
 admin.site.register(User, UserAdmin)
 # # Now register the new UserAdmin...
 # admin.site.register(User, UserAdmin)
@@ -80,4 +80,3 @@ admin.site.register(User, UserAdmin)
 #     )
 
 # admin.site.register(User, CustomUserAdmin)
-

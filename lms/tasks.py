@@ -1,7 +1,8 @@
 from celery import shared_task
-from lms.models import Fine
-from django.core.mail import send_mail
 from django.conf import settings
+from django.core.mail import send_mail
+
+from lms.models import Fine
 
 
 @shared_task
@@ -18,8 +19,10 @@ def increase_fine(*args, **kwargs):
             please pay as soon as possible.
             """
             from_email = settings.DEFAULT_FROM_EMAIL
-            send_mail(subject, message, from_email, [fine.issue_book.student.user.email])
-    
+            send_mail(
+                subject, message, from_email, [fine.issue_book.student.user.email]
+            )
+
 
 # @app.task(bind=True, ignore_result=True)
 # def debug_task(self):
