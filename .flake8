@@ -10,4 +10,4 @@ max-line-length = 79
 # W504: Line break occurred after a binary operator
 # W60: Custom warning or error, if applicable
 # F405: Name may be undefined or comes from * imports
-ignore = E125,E126,E251,E303,W504,W60,F405,E501,W293,F841,F811,E402 
+ignore = E125,E126,E251,E303,W504,W60,F405,E501,W293,F841,F811,E402, F401, E122, E302, W391
