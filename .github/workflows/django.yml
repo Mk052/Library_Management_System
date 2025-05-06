@@ -3,6 +3,7 @@ name: "CI - Lint, Test & Coverage"
 on: [push, pull_request]
 
 jobs:
+  
   black:
     runs-on: ubuntu-latest
     steps:
@@ -70,10 +71,11 @@ jobs:
         coverage html
 
     - name: Upload HTML coverage report
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v3  # Corrected version tag
       with:
         name: coverage-html-report
         path: htmlcov
+
 
 # name: "CI - Lint, Test & Coverage"
 
