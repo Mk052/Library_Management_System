@@ -113,9 +113,9 @@ WSGI_APPLICATION = "library.wsgi.application"
 #         "PORT": os.getenv("DATABASE_PORT", "5432"),
 #     }
 # }
-DATABASES = {
-    "default": dj_database_url.config(default="postgres://localhost")
-}
+# DATABASES = {
+#     "default": dj_database_url.config(default="postgres://localhost")
+# }
 
 
 # Password validation
