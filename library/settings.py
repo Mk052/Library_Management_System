@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 import os
-import dj_database_url
 
 from pathlib import Path
 
@@ -113,6 +112,8 @@ DATABASES = {
         "PORT": os.getenv("DATABASE_PORT", "5432"),
     }
 }
+
+# postgresql://library_project_render_user:SIP6oYBaULqw6gCFSsAkhmiojtGAm2Gk@dpg-d0e8ns3uibrs73be6rkg-a.oregon-postgres.render.com/library_project_render
 # DATABASES = {
 #     "default": dj_database_url.config(default="postgres://localhost")
 # }
